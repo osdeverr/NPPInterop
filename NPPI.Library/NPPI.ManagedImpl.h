@@ -43,6 +43,11 @@ namespace NPPILibrary {
 		AssemblyImpl(System::Reflection::Assembly^ hAssembly)
 			: mManagedAssembly(hAssembly) { }
 
+		std::string name()
+		{
+			return marshal_as<std::string>(mManagedAssembly->FullName);
+		}
+
 		std::unique_ptr<nppi::object> create_instance(const std::string& type, bool ignore_case)
 		{
 			try {
@@ -65,6 +70,17 @@ namespace NPPILibrary {
 		{
 			try {
 				Assembly^ assembly = Assembly::LoadFrom(marshal_as<String^>(filename.c_str()));
+				return std::unique_ptr<nppi::assembly>(new AssemblyImpl(assembly));
+			}
+			catch (Exception^ e)
+			{
+				throw ManagedException(e);
+			}
+		}
+		std::unique_ptr<nppi::assembly> current_assembly()
+		{
+			try {
+				Assembly^ assembly = Assembly::GetCallingAssembly();
 				return std::unique_ptr<nppi::assembly>(new AssemblyImpl(assembly));
 			}
 			catch (Exception^ e)

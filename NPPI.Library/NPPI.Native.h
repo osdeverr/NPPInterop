@@ -20,6 +20,8 @@ namespace nppi {
 	public:
 		virtual ~assembly() {}
 
+		virtual std::string name() = 0;
+
 		virtual std::unique_ptr<object> create_instance(const std::string& type, bool ignore_case) = 0;
 	};
 
@@ -29,6 +31,7 @@ namespace nppi {
 		virtual ~context() {}
 
 		virtual std::unique_ptr<assembly> load_assembly(const std::string& filename) = 0;
+		virtual std::unique_ptr<assembly> current_assembly() = 0;
 	};
 }
 
